@@ -1,0 +1,53 @@
+﻿@page "/recetas/{Categoria}"
+@using BFC.Web.Data.Dtos
+@using BFC.Web.Data.Services
+@inject NavigationManager Nav
+    
+@inject IRecetasServices RecetaService
+
+@rendermode InteractiveServer
+<h1 class="page-title">@Categoria</h1>
+
+@if (recetas is null)
+{
+    <p>Cargando…</p>
+}
+else if (!recetas.Any())
+{
+    <p>No hay recetas para esta categoría.</p>
+}
+else
+{
+    <div class="salads-grid">
+        @foreach (var r in recetas)
+        {
+            <div class="salad-card">
+                <img src="@r.Imagen" alt="@r.Nombre" class="salad-image" />
+                <div class="card-content">
+                    <h3 class="salad-title">@((MarkupString)r.Nombre)</h3>
+                    <button class="view-button"
+                            @onclick="() => IrAlDetalle(r.Id_Recetas)">
+                        Ver
+                    </button>
+                    <div class="prep-time">
+                        <div>
+                            <div style="font-size:.8rem;color:#999">Tiempo de preparación</div>
+                            <div class="time-text">@r.Tiempo_preparacion</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string? Categoria { get; set; }
+    private IReadOnlyList<RecestasDtos>? recetas;
+    void IrAlDetalle(int id) => Nav.NavigateTo($"/receta/{id}");
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Categoria))
+            recetas = await RecetaService.GetByCategoryAsync(Categoria);
+    }
+}

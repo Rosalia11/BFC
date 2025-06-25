@@ -1,0 +1,99 @@
+﻿/* ---------- CONTENEDOR GENERAL ---------- */
+.receta-card {
+    max-width: 780px;
+    margin: 2rem auto;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    background: #fff;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* ---------- HERO ---------- */
+.hero-img {
+    position: relative;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+}
+
+    .hero-img::after { /* overlay oscuro para legibilidad */
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,.4) 0%, rgba(0,0,0,.6) 100%);
+    }
+
+    .hero-img h1,
+    .hero-img .categoria,
+    .btn-back {
+        position: relative;
+        z-index: 2;
+        color: #fff;
+    }
+
+    .hero-img h1 {
+        margin: 0;
+        padding: 1.2rem 1.6rem .2rem;
+        font-size: 1.9rem;
+    }
+
+    .hero-img .categoria {
+        padding: 0 1.6rem 1rem;
+        font-size: .9rem;
+        opacity: .8;
+    }
+
+.btn-back {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255,255,255,.15);
+    border: none;
+    border-radius: 6px;
+    padding: .3rem .55rem;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+    .btn-back:hover {
+        background: rgba(255,255,255,.3);
+    }
+
+/* ---------- BODY ---------- */
+.receta-body {
+    padding: 1.6rem 1.4rem 2rem;
+}
+
+    .receta-body h3 {
+        margin: 1rem 0 .4rem;
+        font-size: 1.1rem;
+    }
+
+.bullet, .steps {
+    margin: .3rem 0 .8rem 1rem;
+    padding: 0;
+}
+
+    .bullet li {
+        margin: .25rem 0;
+        line-height: 1.4;
+    }
+
+    .steps li {
+        margin: .45rem 0;
+        line-height: 1.5;
+    }
+
+        .steps li::marker {
+            font-weight: 600;
+        }
+
+/* ---------- TIEMPO ---------- */
+.tiempo {
+    text-align: right;
+    color: #555;
+    font-style: italic;
+    margin-top: .8rem;
+}

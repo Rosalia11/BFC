@@ -1,57 +1,106 @@
 ﻿@page "/"
+@using BFC.Web.Data.Dtos
+@using BFC.Web.Data.Services
+@inject IRecetasServices RecetaService
+@inject NavigationManager Nav
+@rendermode InteractiveServer
 
-<!-- Barra de búsqueda -->
+
 <div class="search-bar">
-    <input type="text" placeholder="Buscar categorías" />
+    <input type="text" @bind="textoBusqueda" placeholder="Buscar recetas o categorías"
+           class="form-control" />
 </div>
 
-<!-- Título -->
 <h2 class="title">Recetas</h2>
 
-<!-- Tarjetas -->
-<div class="card-container">
-    <div class="card">
-        <img src="https://via.placeholder.com/180x180" alt="receta" />
-        <h3>Ensalada de Salmón</h3>
-        <p class="categoria">Ensaladas</p>
-        <button class="btn-ver">Ver</button>
-        <p class="tiempo">Tiempo de preparación<br /><strong>20 min</strong></p>
-        <div class="heart">🤍</div>
-    </div>
+@if (Filtradas is null)
+{
+    <p>Cargando…</p>
+}
+else if (!Filtradas.Any())
+{
+    <p>No se encontraron recetas.</p>
+}
+else
+{
+    <div class="card-container">
+        @foreach (var r in Filtradas)
+        {
+            <div class="card">
+                <img src="@r.Imagen" alt="@r.Nombre" class="card-img" />
 
-    <div class="card">
-        <img src="https://via.placeholder.com/180x180" alt="receta" />
-        <h3>Ensalada de Salmón</h3>
-        <p class="categoria">Bowls</p>
-        <button class="btn-ver">Ver</button>
-        <p class="tiempo">Tiempo de preparación<br /><strong>20 min</strong></p>
-        <div class="heart">🤍</div>
-    </div>
+                <div class="card-body">
+                    <h3>@r.Nombre</h3>
+                    <p class="categoria">@r.Categoria</p>
 
-    <div class="card">
-        <img src="https://via.placeholder.com/180x180" alt="receta" />
-        <h3>Ensalada de Salmón</h3>
-        <p class="categoria">Sopas y Cremas</p>
-        <button class="btn-ver">Ver</button>
-        <p class="tiempo">Tiempo de preparación<br /><strong>20 min</strong></p>
-        <div class="heart">🤍</div>
-    </div>
+                    <button class="btn-ver"
+                            @onclick="() => IrAlDetalle(r.Id_Recetas)">
+                        Ver
+                    </button>
 
-    <div class="card">
-        <img src="https://via.placeholder.com/180x180" alt="receta" />
-        <h3>Ensalada de Salmón</h3>
-        <p class="categoria">Postres</p>
-        <button class="btn-ver">Ver</button>
-        <p class="tiempo">Tiempo de preparación<br /><strong>20 min</strong></p>
-        <div class="heart">🤍</div>
+                    <p class="tiempo">
+                        Tiempo de preparación<br />
+                        <strong>@r.Tiempo_preparacion</strong>
+                    </p>
+                </div>
+                <button class="heart"
+                        title="Me gusta"
+                        @onclick="() => ToggleFav(r.Id_Recetas)">
+                    @(Favoritas.Contains(r.Id_Recetas) ? "💖" : "🤍")
+                </button>
+            </div>
+        }
     </div>
+}
 
-    <div class="card">
-        <img src="https://via.placeholder.com/180x180" alt="receta" />
-        <h3>Ensalada de Salmón</h3>
-        <p class="categoria">Pastas</p>
-        <button class="btn-ver">Ver</button>
-        <p class="tiempo">Tiempo de preparación<br /><strong>20 min</strong></p>
-        <div class="heart">🤍</div>
-    </div>
-</div>
+@code {
+    private List<RecestasDtos>? recetas;     
+    private List<RecestasDtos>? recetasHome;
+    private IEnumerable<RecestasDtos>? recetasFiltradas;
+    private HashSet<int> Favoritas = new();
+    private string textoBusqueda = string.Empty;
+
+    private readonly string[] categoriasHome =
+        { "Ensaladas", "Sopas y Cremas", "Pastas", "Postres", "Bowls" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        recetas = (await RecetaService.GetAllAsync()).ToList();
+        ConstruirHome();
+    }
+
+    void ToggleFav(int id)
+    {
+        if (!Favoritas.Add(id))
+            Favoritas.Remove(id);
+    }
+    void Filtrar()
+    {
+        IEnumerable<RecestasDtos> baseLista = recetas!;
+
+        if (!string.IsNullOrWhiteSpace(textoBusqueda))
+            baseLista = baseLista.Where(r =>
+                r.Nombre.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase) ||
+                r.Categoria.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase));
+
+        recetasFiltradas = baseLista.Take(5).ToList();  
+    }
+    void IrAlDetalle(int id) => Nav.NavigateTo($"/receta/{id}");
+    void ConstruirHome()
+    {
+        recetasHome = categoriasHome
+            .Select(cat => recetas!
+                .FirstOrDefault(r => r.Categoria == cat)) 
+            .Where(r => r is not null)
+            .ToList()!;
+    }
+    IEnumerable<RecestasDtos> Filtradas =>
+        string.IsNullOrWhiteSpace(textoBusqueda)
+            ? recetasHome!
+            : recetasHome!
+                .Where(r => r.Nombre.Contains(textoBusqueda,
+                            StringComparison.OrdinalIgnoreCase) ||
+                            r.Categoria.Contains(textoBusqueda,
+                            StringComparison.OrdinalIgnoreCase));
+}
+

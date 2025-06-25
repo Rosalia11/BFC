@@ -49,24 +49,34 @@
 
 .card-container {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
-    padding: 0 30px;
+    justify-content: center; /* centra horizontalmente */
+    gap: 1.5rem; /* separación uniforme */
+    padding: 0 1rem;
 }
 
 .card {
-    width: 180px;
-    border-radius: 8px;
-    background-color: #f4f4f4;
+    width: 220px; /* mismo ancho para todas */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.card-body {
+    padding: 1rem;
     text-align: center;
-    padding: 10px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    flex-grow: 1;
 }
 
     .card img {
         width: 100%;
-        border-radius: 5px;
+        height: 150px; /* alto fijo */
+        object-fit: cover;
     }
 
     .card h3 {
@@ -75,35 +85,45 @@
     }
 
     .card .categoria {
-        font-size: 13px;
-        color: gray;
-        margin-bottom: 10px;
+        color: #777;
+        font-size: .85rem;
+        margin: 0;
     }
 
+
 .btn-ver {
-    background-color: #5DA130;
-    color: white;
+    background: #4caf50;
+    color: #fff;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    font-weight: bold;
+    padding: .35rem 1.2rem;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 .card .tiempo {
-    font-size: 12px;
-    color: #333;
-    margin-top: 10px;
+    font-size: .8rem;
+    color: #666;
+    margin-top: auto;
 }
 
 .heart {
     position: absolute;
     bottom: 10px;
-    right: 10px;
-    font-size: 20px;
-    color: #92A98F;
+    right: 12px;
+    font-size: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform .2s;
 }
+
+    .heart:hover {
+        transform: scale(1.2);
+    }
+
+    .heart.liked {
+        color: #ff6b6b;
+    }
 
 
 

@@ -1,0 +1,70 @@
+﻿@page "/receta/{Id:int}"
+@using BFC.Web.Data.Dtos
+@using BFC.Web.Data.Services
+@inject IRecetasServices RecetaService
+@inject NavigationManager Nav
+
+<PageTitle>Receta</PageTitle>
+
+@if (receta is null)
+{
+    <p class="text-center mt-5">Cargando…</p>
+}
+else
+{
+    <div class="receta-card">
+
+        <!-- CABECERA HERO (imagen + título superpuesto) -->
+        <div class="hero-img" style="background-image:url('@receta.Imagen')">
+            <h1>@receta.Nombre</h1>
+            <span class="categoria">@receta.Categoria</span>
+        </div>
+
+        <!-- CUERPO DE LA CARD -->
+        <div class="receta-body">
+
+            <section>
+                <h3>Descripción</h3>
+                <p>@receta.Descripcion</p>
+            </section>
+
+            <section>
+                <h3>Ingredientes</h3>
+                <ul class="bullet">
+                    @foreach (var ing in Split(receta.Ingredientes))
+                    {
+                        <li>@ing</li>
+                    }
+                </ul>
+            </section>
+
+            <section>
+                <h3>Preparación</h3>
+                <ol class="steps">
+                    @foreach (var paso in Split(receta.Preparacion))
+                    {
+                        <li>@paso</li>
+                    }
+                </ol>
+            </section>
+
+            <p class="tiempo">
+                ⏱ <strong>@receta.Tiempo_preparacion</strong>
+            </p>
+        </div>
+    </div>
+}
+
+@code
+{
+  [Parameter] public int Id { get; set; }
+    private RecestasDtos? receta;
+
+    protected override async Task OnParametersSetAsync()
+        => receta = await RecetaService.GetByIdAsync(Id);
+
+    // Separa texto por ';' o salto de línea
+    static IEnumerable<string> Split(string txt) =>
+        txt.Split([';', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
+           .Select(t => t.Trim());
+}

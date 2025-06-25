@@ -1,2 +1,119 @@
-﻿body {
+﻿.perfil-container {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding-bottom: 2rem;
 }
+
+.header {
+    background-color: #4CAF50;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    position: relative;
+}
+
+.menu-icon {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: white;
+    margin-right: 1rem;
+}
+
+.logo {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.perfil {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.perfil h2 {
+    margin: 0.5rem 0 0;
+}
+
+.perfil p {
+    color: #555;
+    margin: 0;
+}
+
+.likes-section {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.likes-title {
+    color: #2E7D32;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.heart {
+    color: black;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #ccc;
+    width: 160px;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+    .card img {
+        width: 100%;
+        border-radius: 8px;
+    }
+
+    .card p {
+        margin: 0.5rem 0;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .card button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+.ingredientes-link {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    font-weight: bold;
+    font-style: italic;
+    color: black;
+}
+
+    .ingredientes-link a {
+        color: black;
+        text-decoration: none;
+    }

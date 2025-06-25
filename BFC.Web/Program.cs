@@ -1,9 +1,10 @@
-using BFC.Web.Components;
+﻿using BFC.Web.Components;
 using BFC.Web.Components.Account;
 using BFC.Web.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using BFC.Web.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddAuthentication(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+// Program.cs
+builder.Services.AddScoped<IRecetasServices, RecetasServices>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -58,6 +61,11 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 // Add additional endpoints required by the Identity /Account Razor components.
-app.MapAdditionalIdentityEndpoints();
+using (var scope = app.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+    await ctx.Database.MigrateAsync();          // aplica migraciones
+    await RecetasServices.SeedAsync(ctx);       // siembra recetas (una sola vez)
+}
 app.Run();
